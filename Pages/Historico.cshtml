@@ -1,0 +1,176 @@
+﻿@page
+@model ControleHoras.Pages.HistoricoModel
+
+<h2>Histórico</h2>
+
+<form method="get" class="row g-3 mb-4">
+
+    <div class="col-md-3">
+        <label class="form-label">Data Inicial</label>
+
+        <input type="date"
+               asp-for="DataInicial"
+               class="form-control" />
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Data Final</label>
+
+        <input type="date"
+               asp-for="DataFinal"
+               class="form-control" />
+    </div>
+
+    <div class="col-md-3 align-self-end">
+        <button type="submit"
+                class="btn btn-primary">
+            Filtrar
+        </button>
+
+        <a asp-page="/Historico"
+           class="btn btn-secondary">
+            Limpar
+        </a>
+    </div>
+
+</form>
+
+<div class="alert alert-info">
+
+    <strong>Registros encontrados:</strong>
+    @Model.Registros.Count
+
+    <br />
+
+    <strong>Saldo do período:</strong>
+
+    @{
+        var saldo = Model.SaldoPeriodo;
+
+        var sinal = saldo < TimeSpan.Zero ? "-" : "+";
+
+        saldo = saldo.Duration();
+    }
+
+    @($"{sinal}{saldo.Hours:D2}:{saldo.Minutes:D2}")
+
+</div>
+
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Total</th>
+            <th>Saldo</th>
+            <th class="col-observacao">Observação</th>
+            <th>Status</th>
+            <th class="text-end">Ações</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    @foreach(var item in Model.Registros)
+    {
+        <tr>
+
+            <td>
+                <a asp-page="/Lancamentos"
+                asp-route-DataSelecionada="@item.Data.ToString("yyyy-MM-dd")">
+                    @item.Data.ToShortDateString()
+                </a>
+            </td>
+
+            <td>
+                @item.TotalTrabalhado().ToString(@"hh\:mm")
+            </td>
+
+            <td>
+
+                @if (item.SaldoDiario(Model.JornadaPadraoHoras)
+                    .TotalMinutes > 0)
+                {
+                    <span class="text-success fw-bold">
+                        @item.SaldoFormatado(Model.JornadaPadraoHoras)
+                    </span>
+                }
+                else if (item.SaldoDiario(Model.JornadaPadraoHoras)
+                    .TotalMinutes < 0)
+                {
+                    <span class="text-danger fw-bold">
+                        @item.SaldoFormatado(Model.JornadaPadraoHoras)
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        @item.SaldoFormatado(Model.JornadaPadraoHoras)
+                    </span>
+                }
+
+            </td>
+
+            <td>
+
+                @if (item.Status(Model.JornadaPadraoHoras) == "OK")
+                {
+                    <span class="badge bg-success">
+                        OK
+                    </span>
+                }
+                else if (item.Status(Model.JornadaPadraoHoras) == "EXTRA")
+                {
+                    <span class="badge bg-primary">
+                        EXTRA
+                    </span>
+                }
+                else if (item.Status(Model.JornadaPadraoHoras) == "EM_ANDAMENTO")
+                {
+                    <span class="badge bg-warning text-dark">
+                        EM ANDAMENTO
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">
+                        DEVEDOR
+                    </span>
+                }
+
+            </td>
+
+            <td class="col-observacao">
+                @item.Observacao
+            </td>
+
+            <td class="text-end">
+                <a asp-page="/Lancamentos"
+                asp-route-DataSelecionada="@item.Data.ToString("yyyy-MM-dd")"
+                class="btn btn-sm btn-primary">
+                    Editar
+                </a>
+
+                <form method="post"
+                    asp-page-handler="Excluir"
+                    style="display:inline;">
+
+                    <input type="hidden"
+                        name="id"
+                        value="@item.Id" />
+
+                    <button type="submit"
+                            class="btn btn-sm btn-danger"
+                            onclick="return confirm('Deseja realmente excluir este registro?');">
+                        Excluir
+                    </button>
+
+                </form>
+            </td>
+
+        </tr>
+    }
+
+    </tbody>
+
+</table>

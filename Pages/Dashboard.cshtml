@@ -1,0 +1,491 @@
+@page
+@model ControleHoras.Pages.DashboardModel
+
+<h2 class="mb-4">Dashboard</h2>
+
+<form method="get" class="row mb-4">
+
+    <div class="col-md-3">
+        <label>Data Inicial</label>
+
+        <input type="date"
+               asp-for="DataInicial"
+               class="form-control" />
+    </div>
+
+    <div class="col-md-3">
+        <label>Data Final</label>
+
+        <input type="date"
+               asp-for="DataFinal"
+               class="form-control" />
+    </div>
+
+    <div class="col-md-2 d-flex align-items-end gap-2">
+
+        <button type="submit"
+                class="btn btn-primary">
+            Filtrar
+        </button>
+
+        <a asp-page="/Dashboard"
+        class="btn btn-secondary">
+            Limpar
+        </a>
+
+    </div>
+
+</form>
+
+@if (Model.DataInicial.HasValue || Model.DataFinal.HasValue)
+{
+    <div class="alert alert-info">
+
+        <strong>Período selecionado:</strong>
+
+        @(Model.DataInicial?.ToString("dd/MM/yyyy") ?? "Início")
+
+        até
+
+        @(Model.DataFinal?.ToString("dd/MM/yyyy") ?? "Hoje")
+
+    </div>
+}
+else
+{
+    <div class="alert alert-secondary">
+
+        <strong>Período:</strong>
+
+        Todos os registros
+
+    </div>
+}
+
+<h5 class="mb-3">Métricas Gerais</h5>
+
+<div class="row">
+
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-2">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2">
+                <h6 class="mb-0 small">Dias Trabalhados</h6>
+                <h5 class="mb-0">@Model.DiasTrabalhados</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-2">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2">
+                <h6 class="mb-0 small">Banco de Horas</h6>
+
+                @if (Model.SaldoBancoHoras.TotalMinutes > 0)
+                {
+                    <h5 class="text-success mb-0">
+                        +@Model.SaldoBancoHoras.ToString(@"hh\:mm")
+                    </h5>
+                }
+                else if (Model.SaldoBancoHoras.TotalMinutes < 0)
+                {
+                    <h5 class="text-danger mb-0">
+                        -@Model.SaldoBancoHoras.Duration().ToString(@"hh\:mm")
+                    </h5>
+                }
+                else
+                {
+                    <h5 class="mb-0">00:00</h5>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-2">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2">
+
+                <h6 class="mb-0 small">Saldo do Período</h6>
+
+                @if (Model.SaldoPeriodo.TotalMinutes > 0)
+                {
+                    <h5 class="text-success mb-0">
+                        +@Model.SaldoPeriodo.ToString(@"hh\:mm")
+                    </h5>
+                }
+                else if (Model.SaldoPeriodo.TotalMinutes < 0)
+                {
+                    <h5 class="text-danger mb-0">
+                        -@Model.SaldoPeriodo.Duration().ToString(@"hh\:mm")
+                    </h5>
+                }
+                else
+                {
+                    <h5 class="mb-0">00:00</h5>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-2">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2">
+                <h6 class="mb-0 small">Horas Trabalhadas</h6>
+                <h5 class="mb-0">
+                    @Model.TotalHorasTrabalhadas.ToString(@"hh\:mm")
+                </h5>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<h5 class="mt-3 mb-3">Indicadores</h5>
+
+<div class="row">
+
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-2">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2">
+                <h6 class="mb-0 small">Horas Extras</h6>
+
+                <h5 class="text-success mb-0">
+                    +@Model.TotalHorasExtras.ToString(@"hh\:mm")
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-2">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2">
+                <h6 class="mb-0 small">Horas Devedoras</h6>
+
+                <h5 class="text-danger mb-0">
+                    -@Model.TotalHorasDevedoras.ToString(@"hh\:mm")
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-2">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2">
+
+                <h6 class="mb-0 small">Média Diária</h6>
+
+                <h5 class="mb-0">
+                    @Model.MediaHorasDia.ToString(@"hh\:mm")
+                </h5>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<h5 class="mt-4 mb-3">Recordes</h5>
+
+<div class="row">
+
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-2">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2">
+
+                <h6 class="mb-0 small">Maior Crédito</h6>
+
+                <h5 class="text-success mb-0">
+                    +@Model.MaiorCredito.ToString(@"hh\:mm")
+                </h5>
+
+                @if (Model.DataMaiorCredito.HasValue)
+                {
+                    <small class="text-muted d-block mt-1">
+                        @Model.DataMaiorCredito.Value.ToShortDateString()
+                    </small>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-2">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2">
+
+                <h6 class="mb-0 small">Maior Débito</h6>
+
+                <h5 class="text-danger mb-0">
+                    -@Model.MaiorDebito.ToString(@"hh\:mm")
+                </h5>
+
+                @if (Model.DataMaiorDebito.HasValue)
+                {
+                    <small class="text-muted d-block mt-1">
+                        @Model.DataMaiorDebito.Value.ToShortDateString()
+                    </small>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-2">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2">
+
+                <h6 class="mb-0 small">Dia Mais Trabalhado</h6>
+
+                <h5 class="mb-0">
+                    @Model.DiaMaisTrabalhado.ToString(@"hh\:mm")
+                </h5>
+
+                @if (Model.DataDiaMaisTrabalhado.HasValue)
+                {
+                    <small class="text-muted d-block mt-1">
+                        @Model.DataDiaMaisTrabalhado.Value.ToShortDateString()
+                    </small>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+
+    <div class="col-lg-6 mb-3">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header py-2">
+                <h5 class="mb-0">Evolução do Banco de Horas</h5>
+            </div>
+
+            <div class="card-body p-2">
+
+                <canvas id="graficoBancoHoras"
+                        height="140"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-3">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header py-2">
+                <h5 class="mb-0">Horas Trabalhadas por Dia</h5>
+            </div>
+
+            <div class="card-body p-2">
+
+                <canvas id="graficoHorasDia"
+                        height="140"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@using System.Text.Json
+@{
+    var labels = Model.EvolucaoBanco
+        .Select(x => x.Data.ToString("dd/MM"))
+        .ToList();
+
+    var valores = Model.EvolucaoBanco
+        .Select(x => x.Saldo.TotalHours)
+        .ToList();
+}
+
+@section Scripts {
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const labels = @Html.Raw(
+    JsonSerializer.Serialize(labels)
+);
+
+const valores = @Html.Raw(
+    JsonSerializer.Serialize(valores)
+);
+
+const valoresNegativos =
+    valores.map(v => v < 0 ? v : null);
+
+const ctx =
+    document.getElementById('graficoBancoHoras');
+
+const ultimoSaldo =
+    valores[valores.length - 1] ?? 0;
+
+const corLinha =
+    ultimoSaldo >= 0
+        ? 'green'
+        : 'red';
+
+new Chart(ctx, {
+
+    type: 'line',
+
+    data: {
+
+        labels: labels,
+
+        datasets: [
+            {
+                label: 'Banco de Horas',
+                data: valores,
+                borderColor: corLinha,
+                backgroundColor: corLinha,
+                tension: 0.3,
+                fill: false,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                order: 1
+            },
+
+            {
+                label: 'Débito',
+                data: valoresNegativos,
+                borderColor: 'transparent',
+                backgroundColor: 'rgba(220, 53, 69, 0.20)',
+                fill: 'origin',
+                pointRadius: 0,
+                tension: 0.3,
+                order: 2
+            }
+        ]
+    },
+
+    options: {
+
+        plugins: {
+
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+
+                        const valor = context.raw;
+
+                        const horas =
+                            Math.trunc(valor);
+
+                        const minutos =
+                            Math.round(
+                                (valor - horas) * 60
+                            );
+
+                        return `${horas}h ${minutos}min`;
+                    }
+                }
+            },
+            title: {
+                display: true,
+                text: 'Evolução do Banco de Horas'
+            }
+        },
+
+       scales: {
+            y: {
+                beginAtZero: false,
+
+                grid: {
+
+                    color: function(context) {
+
+                        if (context.tick.value === 0)
+                            return '#dc3545';
+
+                        return '#e5e5e5';
+                    },
+
+                    lineWidth: function(context) {
+
+                        if (context.tick.value === 0)
+                            return 2;
+
+                        return 1;
+                    }
+                }
+            }
+        }
+    }
+
+});
+
+const labelsHoras =
+    @Html.Raw(
+        JsonSerializer.Serialize(
+            Model.HorasPorDia
+                .Select(x => x.Data.ToString("dd/MM"))
+        )
+    );
+
+const jornadaPadrao =
+    @Model.JornadaPadraoHoras.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+const horasTrabalhadas =
+    @Html.Raw(
+        JsonSerializer.Serialize(
+            Model.HorasPorDia
+                .Select(x => x.Horas.TotalHours)
+        )
+    );
+
+const ctxHoras =
+    document.getElementById("graficoHorasDia");
+
+new Chart(ctxHoras, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: labelsHoras,
+
+        datasets: [
+
+            {
+
+                label: 'Horas Trabalhadas',
+
+                data: horasTrabalhadas,
+
+                backgroundColor: horasTrabalhadas.map(h =>
+                    h >= jornadaPadrao
+                        ? 'green'
+                        : 'red'
+                )
+            },
+
+            {
+
+                type: 'line',
+
+                label: 'Meta',
+
+                data: labelsHoras.map(() => jornadaPadrao),
+
+                borderColor: 'orange',
+
+                borderWidth: 2,
+
+                pointRadius: 0
+            }
+        ]
+    }
+});
+</script>
+}
+
+</div>

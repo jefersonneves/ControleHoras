@@ -1,0 +1,99 @@
+@page
+@model ControleHoras.Pages.ConfiguracoesModel
+
+<h2 class="mb-4">Configurações</h2>
+
+<form method="post">
+
+    <div class="row">
+
+        <div class="col-lg-4 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    Jornada de Trabalho
+                </div>
+
+                <div class="card-body">
+
+                    <label>Jornada diária (horas)</label>
+
+                    <input asp-for="Config.JornadaDiariaHoras"
+                        class="form-control" />
+
+                    <label class="mt-3">Tolerância (minutos)</label>
+
+                    <input asp-for="Config.ToleranciaMinutos"
+                        class="form-control" />
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    Intervalos
+                </div>
+
+                <div class="card-body">
+
+                    <label>Intervalo mínimo (minutos)</label>
+
+                    <input asp-for="Config.IntervaloMinimoMinutos"
+                        class="form-control" />
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    Banco de Horas
+                </div>
+
+                <div class="card-body">
+
+                    <label>Período de apuração (meses)</label>
+
+                    <input asp-for="Config.BancoHorasMeses"
+                        class="form-control" />
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary">
+        Salvar Configurações
+    </button>
+
+    <hr />
+
+    <div class="card shadow-sm mt-4">
+
+        <div class="card-header">
+            <strong>Banco de Dados</strong>
+        </div>
+
+        <div class="card-body">
+
+            <p>
+                <strong>Tipo: </strong> SQLite Local
+            </p>
+
+            <p>
+                <strong>Arquivo: </strong> @Model.CaminhoBanco
+            </p>
+
+            <p>
+                <strong>Tamanho:</strong> @Model.TamanhoBanco
+            </p>
+
+        </div>
+
+    </div>
+
+</form>
