@@ -88,7 +88,6 @@ public class LancamentosModel : PageModel
 
         var jornada = _configuracaoService.JornadaHoras();
 
-        ...
     }
 
     public IActionResult OnPostRegistrar()
