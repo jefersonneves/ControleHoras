@@ -56,6 +56,10 @@ public class LancamentosModel : PageModel
 
     public void OnGet()
     {
+
+        Console.WriteLine("=== ONGET EXECUTOU ===");
+        Console.WriteLine($"DataSelecionada = {DataSelecionada}");
+
         if (DataSelecionada.Date > DateTime.Today)
         {
             DataSelecionada = DateTime.Today;
@@ -76,6 +80,7 @@ public class LancamentosModel : PageModel
         }
 
         RegistroHoje = registro;
+        Console.WriteLine($"RegistroHoje null? {RegistroHoje == null}");
 
         var jornada = _configuracaoService.JornadaHoras();
 
@@ -96,7 +101,12 @@ public class LancamentosModel : PageModel
 
         if (registroHoje == null)
         {
-            return RedirectToPage();
+            registroHoje = new RegistroPonto
+            {
+                Data = DataSelecionada.Date
+            };
+
+            _context.RegistrosPonto.Add(registroHoje);
         }
 
         registroHoje.RegistrarBatida(
@@ -106,7 +116,7 @@ public class LancamentosModel : PageModel
         _context.SaveChanges();
 
         return RedirectToPage(new
-{
+        {
             DataSelecionada = DataSelecionada.ToString("yyyy-MM-dd")
         });
     }

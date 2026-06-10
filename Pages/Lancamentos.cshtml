@@ -31,22 +31,31 @@
 
             </form>
 
-            <div class="alert alert-light py-2 mb-3">
-
-                <div>
-                    <strong>
-                        @Model.RegistroHoje.Data.ToShortDateString()
-                    </strong>
+           @if (Model.RegistroHoje == null)
+            {
+                <div class="alert alert-danger">
+                    RegistroHoje está NULL
                 </div>
+            }
+            else
+            {
+                <div class="alert alert-light py-2 mb-3">
 
-                <small class="text-muted">
-                    Próxima ação:
-                    <strong>
-                        @Model.RegistroHoje.ProximaAcao()
-                    </strong>
-                </small>
+                    <div>
+                        <strong>
+                            @Model.RegistroHoje.Data.ToShortDateString()
+                        </strong>
+                    </div>
 
-            </div>
+                    <small class="text-muted">
+                        Próxima ação:
+                        <strong>
+                            @Model.RegistroHoje.ProximaAcao()
+                        </strong>
+                    </small>
+
+                </div>
+            }
 
             @if (!string.IsNullOrEmpty(Model.MensagemErro))
             {
