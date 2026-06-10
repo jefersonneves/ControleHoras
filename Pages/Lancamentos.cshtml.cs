@@ -56,9 +56,8 @@ public class LancamentosModel : PageModel
 
     public void OnGet()
     {
-
         Console.WriteLine("=== ONGET EXECUTOU ===");
-        Console.WriteLine($"DataSelecionada = {DataSelecionada}");
+        Console.WriteLine($"DataSelecionada = {DataSelecionada:yyyy-MM-dd}");
 
         if (DataSelecionada.Date > DateTime.Today)
         {
@@ -68,8 +67,12 @@ public class LancamentosModel : PageModel
         var registro = _context.RegistrosPonto
             .FirstOrDefault(r => r.Data.Date == DataSelecionada.Date);
 
+        Console.WriteLine($"Registro encontrado? {registro != null}");
+
         if (registro == null)
         {
+            Console.WriteLine("Criando registro para a data");
+
             registro = new RegistroPonto
             {
                 Data = DataSelecionada.Date
@@ -80,19 +83,12 @@ public class LancamentosModel : PageModel
         }
 
         RegistroHoje = registro;
+
         Console.WriteLine($"RegistroHoje null? {RegistroHoje == null}");
 
         var jornada = _configuracaoService.JornadaHoras();
 
-        SaldoAcumulado = _context.RegistrosPonto
-            .ToList()
-            .Where(r => r.DiaEncerrado())
-            .Select(r => r.SaldoDiario(jornada))
-            .Aggregate(TimeSpan.Zero, (total, saldo) => total + saldo);
-
-        MetaDiariaFormatada = TimeSpan.FromHours(jornada).ToString(@"hh\:mm");  
-
-        JornadaHoras = _configuracaoService.JornadaHoras();  
+        ...
     }
 
     public IActionResult OnPostRegistrar()
