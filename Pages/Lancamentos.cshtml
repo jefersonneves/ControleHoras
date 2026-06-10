@@ -69,11 +69,15 @@
                 <input type="hidden"
                     asp-for="DataSelecionada" />
 
-                <button class="btn btn-primary btn-sm">
+                <button type="submit"
+                        asp-page-handler="Registrar"
+                        class="btn btn-primary btn-sm">
                     Registrar Agora
                 </button>
 
-                <button class="btn btn-outline-secondary btn-sm">
+                <button type="submit"
+                        asp-page-handler="Desfazer"
+                        class="btn btn-outline-secondary btn-sm">
                     Desfazer Última Batida
                 </button>
 

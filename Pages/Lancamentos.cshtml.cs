@@ -92,6 +92,9 @@ public class LancamentosModel : PageModel
 
     public IActionResult OnPostRegistrar()
     {
+
+        Console.WriteLine("=== ONPOST REGISTRAR EXECUTOU ===");
+
         var registroHoje = ObterRegistroSelecionado();
 
         if (registroHoje == null)
@@ -118,6 +121,9 @@ public class LancamentosModel : PageModel
 
     public IActionResult OnPostDesfazer()
     {
+
+        Console.WriteLine("=== ONPOST DESFAZER EXECUTOU ===");
+        
         var registroHoje = ObterRegistroSelecionado();
 
         if (registroHoje == null)
