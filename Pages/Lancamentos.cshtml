@@ -92,7 +92,7 @@
                         <input type="time"
                            class="form-control"
                            name="EntradaManha"
-                           value="@Model.RegistroHoje.EntradaManha?.ToString(@"hh\:mm")" />
+                           value="@Model.RegistroHoje?.EntradaManha?.ToString(@"hh\:mm")" />
                     </div>
 
                     <div class="col-md-6">
@@ -100,7 +100,7 @@
                         <input type="time"
                            class="form-control"
                            name="SaidaManha"
-                           value="@Model.RegistroHoje.SaidaManha?.ToString(@"hh\:mm")" />
+                           value="@Model.RegistroHoje?.SaidaManha?.ToString(@"hh\:mm")" />
                     </div>
 
                 </div>
@@ -112,7 +112,7 @@
                         <input type="time"
                            class="form-control"
                            name="EntradaTarde"
-                           value="@Model.RegistroHoje.EntradaTarde?.ToString(@"hh\:mm")" />
+                           value="@Model.RegistroHoje?.EntradaTarde?.ToString(@"hh\:mm")" />
                     </div>
 
                     <div class="col-md-6">
@@ -120,7 +120,7 @@
                         <input type="time"
                            class="form-control"
                            name="SaidaTarde"
-                           value="@Model.RegistroHoje.SaidaTarde?.ToString(@"hh\:mm")" />
+                           value="@Model.RegistroHoje?.SaidaTarde?.ToString(@"hh\:mm")" />
                     </div>
 
                 </div>
@@ -156,7 +156,7 @@
                         <textarea
                             name="Observacao"
                             class="form-control"
-                            rows="3">@Model.RegistroHoje.Observacao</textarea>
+                            rows="3">@Model.RegistroHoje?.Observacao</textarea>
 
                         <br />
 
@@ -181,7 +181,7 @@
                             </small>
 
                             <strong>
-                                @Model.RegistroHoje.TotalFormatado()
+                                @Model.RegistroHoje?.TotalFormatado()
                             </strong>
                         </div>
 
@@ -225,10 +225,10 @@
                                 Status
                             </small>
 
-                            @if (Model.RegistroHoje.DiaEncerrado())
+                            @if (Model.RegistroHoje?.DiaEncerrado() == true)
                             {
                                 <strong>
-                                    @Model.RegistroHoje.SaldoFormatado(Model.JornadaHoras)
+                                    @Model.RegistroHoje?.SaldoFormatado(Model.JornadaHoras)
                                 </strong>
                             }
                             else
